@@ -31,13 +31,16 @@ public class BeatTennis extends JFrame {
 	private ImageIcon leftbuttonselectedimage = new ImageIcon(Main.class.getResource("../images/leftbuttonselected.png"));
 	private ImageIcon rightbuttonimage = new ImageIcon(Main.class.getResource("../images/rightbutton.png"));
 	private ImageIcon rightbuttonselectedimage = new ImageIcon(Main.class.getResource("../images/rightbuttonselected.png"));
-
+	private ImageIcon songstartbuttonimage = new ImageIcon(Main.class.getResource("../images/songstartbutton.png"));
+	private ImageIcon songstartbuttonselectedimage = new ImageIcon(Main.class.getResource("../images/songstartbuttonselected.png"));
+	
 	private JButton quitbutton = new JButton(quitbuttonimage);
 	private JButton startbutton = new JButton(startbuttonimage);
 	private JButton optionbutton = new JButton(optionbuttonimage);
 	private JButton leftbutton = new JButton(leftbuttonimage);
 	private JButton rightbutton = new JButton(rightbuttonimage);
-
+	private JButton songstartbutton = new JButton(songstartbuttonimage);
+	
 	private JLabel menubar = new JLabel(new ImageIcon(Main.class.getResource("../images/menubar.png")));
 
 	private int mouseX, mouseY;
@@ -126,6 +129,7 @@ public class BeatTennis extends JFrame {
 			public void mousePressed(MouseEvent e) {
 				startbutton.setVisible(false);
 				optionbutton.setVisible(false);
+				songstartbutton.setVisible(true);
 			 // background = new ImageIcon(...);     -> start 버튼 눌렀을 때 표시할 배경 ㅇㅇ
 				ismainscreen = true;
 				leftbutton.setVisible(true);
@@ -207,7 +211,33 @@ public class BeatTennis extends JFrame {
 			}
 		});
 		add(rightbutton);
+		
+		songstartbutton.setBounds(510, 550, 260, 100);
+		songstartbutton.setBorderPainted(false);
+		songstartbutton.setContentAreaFilled(false);
+		songstartbutton.setFocusPainted(false);
+		songstartbutton.setVisible(false);
+		songstartbutton.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				songstartbutton.setIcon(songstartbuttonselectedimage);
+				songstartbutton.setCursor(new Cursor(Cursor.HAND_CURSOR));
+			}
+
+			@Override
+			public void mouseExited(MouseEvent e) {
+				songstartbutton.setIcon(songstartbuttonimage);
+				songstartbutton.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+			}
+
+			@Override
+			public void mousePressed(MouseEvent e) {
+				// 게임 시작 구현
+			}
+		});
+		add(songstartbutton);
 	}
+	
 	
 	public void paint(Graphics g) {
 		screenImage = createImage(Main.SCREEN_WIDTH, Main.SCREEN_HEIGHT);
