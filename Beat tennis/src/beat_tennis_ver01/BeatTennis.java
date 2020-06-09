@@ -3,6 +3,7 @@ package beat_tennis_ver01;
 import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -18,8 +19,6 @@ public class BeatTennis extends JFrame {
 
 	private Image screenImage;
 	private Graphics screenGraphic;
-
-	private Image background = new ImageIcon(Main.class.getResource("../images/background3.jpeg")).getImage();
 	
 	private ImageIcon quitbuttonimage = new ImageIcon(Main.class.getResource("../images/quitbutton.png"));
 	private ImageIcon quitbuttonselectedimage = new ImageIcon(Main.class.getResource("../images/quitbuttonselected.png"));
@@ -33,6 +32,8 @@ public class BeatTennis extends JFrame {
 	private ImageIcon rightbuttonselectedimage = new ImageIcon(Main.class.getResource("../images/rightbuttonselected.png"));
 	private ImageIcon songstartbuttonimage = new ImageIcon(Main.class.getResource("../images/songstartbutton.png"));
 	private ImageIcon songstartbuttonselectedimage = new ImageIcon(Main.class.getResource("../images/songstartbuttonselected.png"));
+	//private ImageIcon backbuttonimage = new ImageIcon(Main.class.getResource("../images/backbutton.png"));
+	//private ImageIcon backbuttonselectedimage = new ImageIcon(Main.class.getResource("../images/backbuttonselected.png"));
 	
 	private JButton quitbutton = new JButton(quitbuttonimage);
 	private JButton startbutton = new JButton(startbuttonimage);
@@ -40,17 +41,23 @@ public class BeatTennis extends JFrame {
 	private JButton leftbutton = new JButton(leftbuttonimage);
 	private JButton rightbutton = new JButton(rightbuttonimage);
 	private JButton songstartbutton = new JButton(songstartbuttonimage);
+	//private JButton backbutton = new JButton(backbuttonimage);
 	
+	private Image background = new ImageIcon(Main.class.getResource("../images/background3.jpeg")).getImage();
 	private JLabel menubar = new JLabel(new ImageIcon(Main.class.getResource("../images/menubar.png")));
 
 	private int mouseX, mouseY;
 
 	private boolean ismainscreen = false;
+	private boolean isgamescreen = false;
 	
 	ArrayList<Track> tracklist = new ArrayList<Track>();
 	private Image selectedimage;
+	//private Image titleimage = new ImageIcon(Main.class.getResource("../images/song1_thumbnail_title.png")).getImage(); -> 곡 타이틀 이미지 넣는 코드
 	private Music selectedMusic;
 	private int nowselected=0;
+	
+	public static Game game = new Game();
 	
 	public BeatTennis() {
 		setUndecorated(true);
@@ -62,11 +69,17 @@ public class BeatTennis extends JFrame {
 		setBackground(new Color(0, 0, 0, 0));
 		setVisible(true);
 		setLayout(null);
-
-		Music bgm1 = new Music("bgm1.mp3", false);
-		bgm1.start();
 		
-		//tracklist.add(new Track(String thumbnail, String highlights, String gamemusic)) -> 곡 추가
+		addKeyListener(new KeyListener());
+
+		Music IntroMusic = new Music("bgm1.mp3", false);
+		IntroMusic.start();
+		
+		//Tracklist에 곡 추가, 원하는 곡 추가 후, 이름 바꾸기
+		tracklist.add(new Track("song1_thumbnail.png", "Control Cutting.mp3", "Unknown Brain & Rival - Control (ft. Jex).mp3"));
+		tracklist.add(new Track("song2_thumbnail.png", "Control Cutting.mp3", "Unknown Brain & Rival - Control (ft. Jex).mp3"));
+		tracklist.add(new Track("song3_thumbnail.png", "Control Cutting.mp3", "Unknown Brain & Rival - Control (ft. Jex).mp3"));
+		
 		quitbutton.setBounds(1250, 0, 30, 30);
 		quitbutton.setContentAreaFilled(false);
 		quitbutton.setFocusPainted(false);
@@ -127,6 +140,8 @@ public class BeatTennis extends JFrame {
 
 			@Override
 			public void mousePressed(MouseEvent e) {
+				IntroMusic.close();
+				selectTrack(nowselected);
 				startbutton.setVisible(false);
 				optionbutton.setVisible(false);
 				songstartbutton.setVisible(true);
@@ -134,7 +149,6 @@ public class BeatTennis extends JFrame {
 				ismainscreen = true;
 				leftbutton.setVisible(true);
 				rightbutton.setVisible(true);
-				
 			}
 		});
 		add(startbutton);
@@ -232,35 +246,68 @@ public class BeatTennis extends JFrame {
 
 			@Override
 			public void mousePressed(MouseEvent e) {
-				// 게임 시작 구현
+				gameStart(nowselected);// 게임 시작 구현
 			}
 		});
 		add(songstartbutton);
+		
+		// backbutton을 구현하면 활성화하기!!
+		/*
+		backbutton.setBounds(20, 50, 60, 60);
+		backbutton.setBorderPainted(false);
+		backbutton.setContentAreaFilled(false);
+		backbutton.setFocusPainted(false);
+		backbutton.setVisible(false);
+		backbutton.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				backbutton.setIcon(backbuttonselectedimage);
+				backbutton.setCursor(new Cursor(Cursor.HAND_CURSOR));
+			}
+
+			@Override
+			public void mouseExited(MouseEvent e) {
+				backbutton.setIcon(backbuttonimage);
+				backbutton.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+			}
+
+			@Override
+			public void mousePressed(MouseEvent e) {
+				backMain();
+			}
+		});
+		add(backbutton);
+		 */
 	}
 	
 	
 	public void paint(Graphics g) {
 		screenImage = createImage(Main.SCREEN_WIDTH, Main.SCREEN_HEIGHT);
 		screenGraphic = screenImage.getGraphics();
-		screenDraw(screenGraphic);
+		screenDraw((Graphics2D) screenGraphic);
 		g.drawImage(screenImage, 0, 0, null);
 	}
 
-	public void screenDraw(Graphics g) {
+	public void screenDraw(Graphics2D g) {
 		g.drawImage(background, 0, 0, null);
-		if (ismainscreen)
+		if (ismainscreen) {
 			g.drawImage(selectedimage, 440, 100, null);
+			//g.drawImage(titleimage, 440, 70, null); -> 곡 타이틀 넣기
+		}
+		// Game Screen
+		if (isgamescreen) {
+			game.screenDraw(g);
+		}
 		paintComponents(g);
 		this.repaint();
 	}
 	
 	public void selectTrack(int nowselected) {
-		if(selectedMusic != null) {
+		if(selectedMusic != null)
 			selectedMusic.close();
 		selectedimage = new ImageIcon(Main.class.getResource("../images/"+tracklist.get(nowselected).getThumbnail())).getImage();
 		selectedMusic = new Music(tracklist.get(nowselected).getHighlights(),true);
 		selectedMusic.start();
-		}
 	}
 	
 	public void selectLeft() {
@@ -277,5 +324,28 @@ public class BeatTennis extends JFrame {
 		else
 			nowselected++;
 		selectTrack(nowselected);
+	}
+	
+	// When the game starts
+	public void gameStart(int nowSelected) {
+		if(selectedMusic != null) 
+			selectedMusic.close();
+		ismainscreen = false;
+		leftbutton.setVisible(false);
+		rightbutton.setVisible(false);
+		songstartbutton.setVisible(false);
+		//backbutton.setVisible(true); -> backbutton 구현되면 주석 풀어주기!
+		isgamescreen = true;
+	}
+	
+	// When the user wants go to back
+	public void backMain() {
+		ismainscreen = true;
+		leftbutton.setVisible(true);
+		rightbutton.setVisible(true);
+		songstartbutton.setVisible(true);
+		//backbutton.setVisible(false); -> backbutton 구현되면 주석 풀어주기!
+		selectTrack(nowselected);
+		isgamescreen = false;
 	}
 }
