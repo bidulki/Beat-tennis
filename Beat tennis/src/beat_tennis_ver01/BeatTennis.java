@@ -145,7 +145,7 @@ public class BeatTennis extends JFrame {
 				startbutton.setVisible(false);
 				optionbutton.setVisible(false);
 				songstartbutton.setVisible(true);
-			 // background = new ImageIcon(...);     -> start 버튼 눌렀을 때 표시할 배경 ㅇㅇ
+				background = new ImageIcon(Main.class.getResource("../images/background_transparency.jpeg")).getImage();
 				ismainscreen = true;
 				leftbutton.setVisible(true);
 				rightbutton.setVisible(true);
