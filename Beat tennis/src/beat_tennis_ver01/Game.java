@@ -1,10 +1,12 @@
 package beat_tennis_ver01;
 
+import java.awt.AWTException;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.RenderingHints;
+import java.awt.Robot;
 import java.util.ArrayList;
 
 import javax.swing.ImageIcon;
@@ -32,6 +34,8 @@ public class Game extends Thread {
 	private String title;
 	private String musicpath;
 	private Music gamemusic;
+	private int score = 0;
+	private boolean game_end = false;
 	
 	ArrayList<Note> notelist = new ArrayList<Note>();
 
@@ -53,6 +57,7 @@ public class Game extends Thread {
 		g.drawImage(noteRouteLine, 742, 30, null);
 		g.drawImage(noteRouteLine, 846, 30, null);
 		g.drawImage(judgementLine, 430, 580, null);
+		
 		// 노트 떨어지는거하고 판정된거 갱신하면서 화면에 출력
 		// 노트가 판정선 완전히 넘어가면 미스 판정
 		for (int i = 0; i < notelist.size(); i++) {
@@ -74,6 +79,25 @@ public class Game extends Thread {
 		g.setFont(new Font("Arial", Font.BOLD, 30));
 		g.drawString(title, 20, 702);
 		g.drawImage(judgeimage,460,420,null);
+		
+		// 키 입력 정보
+		g.drawString("D", 474, 650);
+		g.drawString("F", 578, 650);
+		g.drawString("J", 682, 650);
+		g.drawString("K", 786, 650);
+		g.setFont(new Font("Elephant", Font.BOLD, 30));
+		
+		// 점수 표시
+		String str_score = Integer.toString(score);
+		g.drawString(str_score, 1100, 702);
+		g.setFont(new Font("Arial", Font.BOLD, 30));
+		
+		if(game_end) {
+			g.setColor(Color.black);
+			g.drawString("Final Score", 560, 220);
+			g.drawString(str_score, 600, 260);
+			g.setFont(new Font("Elephant", Font.BOLD, 30));
+		}
 	}
 	
 	// 키 누르거나 뗐을 때 판정 + 이미지 교환
@@ -121,11 +145,15 @@ public class Game extends Thread {
 			e.printStackTrace();
 		} catch (URISyntaxException e) {
 			e.printStackTrace();
+		} catch (AWTException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 	}
 
 	public void close() {
 		gamemusic.close();
+		game_end = true;
 		this.interrupt();
 	}
 
@@ -146,12 +174,12 @@ public class Game extends Thread {
 	 */
 	
 	// 노트 생성해서 떨어뜨리기
-	public void dropNotes() throws IOException, URISyntaxException{
+	public void dropNotes() throws IOException, URISyntaxException, AWTException{
 		int i=0;
 		int offset = 0; // 첫 노트 시작 시점 (밀리초)
 		int gap = 200; // 최단 비트 밀리초
 		
-		Beat[] beats = null; // 채보 (?)
+		Beat[] beats = null; // 채보
 		
 		/*
 		 *	beats == 채보
@@ -175,12 +203,14 @@ public class Game extends Thread {
 			int beat_time;
 			
 			beats = new Beat[beat_num];
+			
 			for(int j=0; j < beat_num; j++) {
 				key = data_split[j].substring(0,1);
 				beat_time = Integer.parseInt(data_split[j].substring(1));
 				beats[j] = new Beat(offset+gap*beat_time, key);			
 			}
 		} 
+		
 		else if (title.equals("Gradamical -Floor B2")) {
 			String name = "Floor B2.txt";
 			File file = new File(Main.class.getResource("../charts/" + name).toURI());
@@ -195,12 +225,14 @@ public class Game extends Thread {
 			int beat_time;
 			
 			beats = new Beat[beat_num];
+			
 			for(int j=0; j < beat_num; j++) {
 				key = data_split[j].substring(0,1);
 				beat_time = Integer.parseInt(data_split[j].substring(1));
 				beats[j] = new Beat(offset+gap*beat_time, key);			
 			}
 		}
+		
 		else if (title.equals("Rob Gasser - Hollow (ft. Veronica Bravo)")) {
 			String name = "Hollow.txt";
 			File file = new File(Main.class.getResource("../charts/" + name).toURI());
@@ -215,25 +247,32 @@ public class Game extends Thread {
 			int beat_time;
 			
 			beats = new Beat[beat_num];
+			
 			for(int j=0; j < beat_num; j++) {
 				key = data_split[j].substring(0,1);
 				beat_time = Integer.parseInt(data_split[j].substring(1));
 				beats[j] = new Beat(offset+gap*beat_time, key);			
 			}
 		}
+		
 		gamemusic.start();
+		
 		while(i < beats.length && !isInterrupted()) {
-
-			if(beats[i].getTime() +1000 <= gamemusic.getTime()) {
+			if(beats[i].getTime() + 1000 <= gamemusic.getTime()) {
 				Note note = new Note(beats[i].getNoteType());
 				note.start();
 				notelist.add(note);
 				i++;
 			}
 		}
+		
+		Robot tRobot = new Robot();
+		tRobot.delay(1000);
+		
+		close();
 	}
 	
-	// 판정 ( 키가 눌렸을 때마다 실행됨 )
+	// 판정 (키가 눌렸을 때마다 실행됨)
 	public void judge(String input) {
 		for(int i=0;i<notelist.size();i++) {
 			Note note = notelist.get(i);
@@ -244,19 +283,23 @@ public class Game extends Thread {
 		}
 	}
 	
-	// 판정에 따라 텍스트 띄우기 ( Note 클래스에 있는 judge 참고 )
+	// 판정에 따라 텍스트 띄우기 (Note 클래스에 있는 judge 참고)
 	public void judgeEvent(String judge) {
 		if(judge.contentEquals("Late")) {
 			judgeimage = new ImageIcon(Main.class.getResource("../images/late.png")).getImage();
+			score += 100;
 		}
 		if(judge.contentEquals("Good")) {
 			judgeimage = new ImageIcon(Main.class.getResource("../images/good.png")).getImage();
+			score += 200;
 		}
 		if(judge.contentEquals("Cool")) {
 			judgeimage = new ImageIcon(Main.class.getResource("../images/cool.png")).getImage();
+			score += 300;
 		}
 		if(judge.contentEquals("Early")) {
 			judgeimage = new ImageIcon(Main.class.getResource("../images/early.png")).getImage();
+			score += 100;
 		}
 	}
 }

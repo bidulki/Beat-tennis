@@ -15,6 +15,7 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 
+@SuppressWarnings("serial")
 public class BeatTennis extends JFrame {
 
 	private Image screenImage;
@@ -55,7 +56,6 @@ public class BeatTennis extends JFrame {
 	
 	ArrayList<Track> tracklist = new ArrayList<Track>();
 	private Image selectedimage;
-	//private Image titleimage = new ImageIcon(Main.class.getResource("../images/song1_thumbnail_title.png")).getImage(); -> ê³¡ íƒ€ì´í‹€ ì´ë¯¸ì§€ ë„£ëŠ” ì½”ë“œ
 	private Music selectedMusic;
 	private int nowselected=0;
 	
@@ -63,7 +63,7 @@ public class BeatTennis extends JFrame {
 	
 	public BeatTennis() {
 		
-		//Tracklistì— ê³¡ ì¶”ê°€, ì›í•˜ëŠ” ê³¡ ì¶”ê°€ í›„, ì´ë¦„ ë°”ê¾¸ê¸°
+		//Tracklist¿¡ °î Ãß°¡, ¿øÇÏ´Â °î Ãß°¡ ÈÄ, ÀÌ¸§ ¹Ù²Ù±â
 		tracklist.add(new Track("song1_thumbnail.png", "Control Cutting.mp3", "Unknown Brain & Rival - Control (ft. Jex).mp3","Unknown Brain & Rival - Control (ft. Jex)"));
 		tracklist.add(new Track("song2_thumbnail.png", "Floor B2 Cutting.mp3", "Gradamical -Floor B2.mp3","Gradamical -Floor B2"));
 		tracklist.add(new Track("song3_thumbnail.png", "Hollow Cutting.mp3", "Rob Gasser - Hollow (ft. Veronica Bravo).mp3","Rob Gasser - Hollow (ft. Veronica Bravo)"));
@@ -240,12 +240,12 @@ public class BeatTennis extends JFrame {
 
 			@Override
 			public void mousePressed(MouseEvent e) {
-				gameStart(nowselected);// ê²Œì„ ì‹œì‘ êµ¬í˜„
+				gameStart(nowselected);// °ÔÀÓ ½ÃÀÛ ±¸Çö
 			}
 		});
 		add(songstartbutton);
 		
-		// ë©”ì¸í™”ë©´ìœ¼ë¡œ ëŒì•„ê°€ëŠ” ë²„íŠ¼ (ì™¼ìª½ í™”ì‚´í‘œ)
+		// ¸ŞÀÎÈ­¸éÀ¸·Î µ¹¾Æ°¡´Â ¹öÆ° (¿ŞÂÊ È­»ìÇ¥)
 		backbutton.setBounds(20, 50, 60, 60);
 		backbutton.setBorderPainted(false);
 		backbutton.setContentAreaFilled(false);
@@ -280,12 +280,10 @@ public class BeatTennis extends JFrame {
 		g.drawImage(screenImage, 0, 0, null);
 	}
 
-	// titleimageì— ë­ ë„£ì–´ì•¼ ë  ì§€ ëª°ë¼ì„œ ì•ˆë„£ì—ˆìŒ.
 	public void screenDraw(Graphics2D g) {
 		g.drawImage(background, 0, 0, null);
 		if (ismainscreen) {
 			g.drawImage(selectedimage, 440, 100, null);
-			//g.drawImage(titleimage, 440, 70, null); -> ê³¡ íƒ€ì´í‹€ ë„£ê¸°
 		}
 		// Game Screen
 		if (isgamescreen) {

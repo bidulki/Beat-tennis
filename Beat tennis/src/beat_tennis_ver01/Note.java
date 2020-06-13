@@ -76,7 +76,7 @@ public class Note extends Thread {
 	// 판정 함수
 	// 노트 위치에 따라 판정 결정하고 노트 삭제
 	public String judge() {
-		if(y >= 608) {
+		if(y >= 610) {
 			close();
 			return "Late";
 		}
@@ -88,11 +88,11 @@ public class Note extends Thread {
 			close();
 			return "Cool";
 		}
-		else if(y >= 562) {
+		else if(y >= 550) {
 			close();
 			return "Good";
 		}
-		else if(y >= 544) {
+		else if(y >= 540) {
 			close();
 			return "Early";
 		}
