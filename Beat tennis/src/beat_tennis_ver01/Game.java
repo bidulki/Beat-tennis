@@ -9,6 +9,15 @@ import java.util.ArrayList;
 
 import javax.swing.ImageIcon;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.URISyntaxException;
+
 public class Game extends Thread {
 
 	private Image gameInfo = new ImageIcon(Main.class.getResource("../images/gameinfo.png")).getImage();
@@ -33,7 +42,7 @@ public class Game extends Thread {
 	}
 
 	public void screenDraw(Graphics2D g) {
-		// ¿©±â¼­ x,y ÁÂÇ¥ Á¶Á¤ÇÏ¸é¼­ È­¸é ¸¸µé±â
+		// ì—¬ê¸°ì„œ x,y ì¢Œí‘œ ì¡°ì •í•˜ë©´ì„œ í™”ë©´ ë§Œë“¤ê¸°
 		g.drawImage(noteRouteD, 434, 30, null);
 		g.drawImage(noteRouteF, 538, 30, null);
 		g.drawImage(noteRouteJ, 642, 30, null);
@@ -44,8 +53,8 @@ public class Game extends Thread {
 		g.drawImage(noteRouteLine, 742, 30, null);
 		g.drawImage(noteRouteLine, 846, 30, null);
 		g.drawImage(judgementLine, 430, 580, null);
-		// ³ëÆ® ¶³¾îÁö´Â°ÅÇÏ°í ÆÇÁ¤µÈ°Å °»½ÅÇÏ¸é¼­ È­¸é¿¡ Ãâ·Â
-		// ³ëÆ®°¡ ÆÇÁ¤¼± ¿ÏÀüÈ÷ ³Ñ¾î°¡¸é ¹Ì½º ÆÇÁ¤
+		// ë…¸íŠ¸ ë–¨ì–´ì§€ëŠ”ê±°í•˜ê³  íŒì •ëœê±° ê°±ì‹ í•˜ë©´ì„œ í™”ë©´ì— ì¶œë ¥
+		// ë…¸íŠ¸ê°€ íŒì •ì„  ì™„ì „íˆ ë„˜ì–´ê°€ë©´ ë¯¸ìŠ¤ íŒì •
 		for (int i = 0; i < notelist.size(); i++) {
 			Note note = notelist.get(i);
 			if(note.getY() > 620) {
@@ -58,7 +67,7 @@ public class Game extends Thread {
 			note.screenDraw(g);
 		}
 
-		// °î Á¤º¸ ³Ö±â (ÆùÆ®´Â ¾ğÁ¦µçÁö ¹Ù²ãµµ µÊ)
+		// ê³¡ ì •ë³´ ë„£ê¸° (í°íŠ¸ëŠ” ì–¸ì œë“ ì§€ ë°”ê¿”ë„ ë¨)
 		g.drawImage(gameInfo, 0, 660, null);
 		g.setColor(Color.white);
 		g.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
@@ -67,7 +76,7 @@ public class Game extends Thread {
 		g.drawImage(judgeimage,460,420,null);
 	}
 	
-	// Å° ´©¸£°Å³ª ¶ÃÀ» ¶§ ÆÇÁ¤ + ÀÌ¹ÌÁö ±³È¯
+	// í‚¤ ëˆ„ë¥´ê±°ë‚˜ ë—ì„ ë•Œ íŒì • + ì´ë¯¸ì§€ êµí™˜
 	public void pressD() {
 		judge("D");
 		noteRouteD = new ImageIcon(Main.class.getResource("../images/noteroutepressed.png")).getImage();
@@ -106,7 +115,13 @@ public class Game extends Thread {
 
 	@Override
 	public void run() {
-		dropNotes();
+		try {
+			dropNotes();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (URISyntaxException e) {
+			e.printStackTrace();
+		}
 	}
 
 	public void close() {
@@ -115,57 +130,96 @@ public class Game extends Thread {
 	}
 
 	/*
-	 *	<¸Å¿ì Áß¿ä> 
-	 *  ÄÚµå Æ¯¼º»ó
-	 *  ³ëÆ®°¡ REACH_TIMEÃÊ ÀÌÈÄºÎÅÍ ( REACH_TIME = ³ëÆ®°¡ »ı¼ºµÇ¾úÀ» ¶§ ÆÇÁ¤¼±¿¡ µü µµ´ŞÇÏ´Â ½Ã°£ ) 
-	 *  ¶³¾îÁö°Ô µÇ¾î ÀÖÀ½ ¤·¤·
-	 *  ±Ùµ¥ Ã¹¹øÂ° ³ëÆ® ¿ÀÇÁ¼ÂÀ» 0À¸·Î ÇÏ°í
-	 *  ½ÇÇà½ÃÄÑº¸¸é Ã³À½¿¡´Â ¹®Á¦ ¾ø´Âµ¥
-	 *  °è¼Ó ½ÇÇà½ÃÅ°¸é Ã¹¹ø¤Š ³ëÆ®¶û
-	 *  ´Ù¸¥ ³ëÆ®¶û °Å¸®°¡ Á¡Á¡ ¸Ö¾îÁü
-	 *  ·º ¶§¹®ÀÎÁö´Â ¸ğ¸£°Ú´Âµ¥
-	 *  °íÄ¥¼ö ÀÖ´Ù¸é ¼öÁ¤ ¹Ù¶÷
-	 *  °Å¸® ¾È¸Ö¾îÁö°Ô ÇÏ±â À§ÇØ¼­
-	 *  ÀÏºÎ·¯ ¿ÀÇÁ¼Â °ª¿¡ 1000 ´õÇÔ (155¹øÂ° ÁÙ Âü°í)
-	 *  """±×·¡¼­ À½¾Ç ³ÖÀ» ¶§ ¸Ç ¾Õ¿¡ 2ÃÊ °ø¹é µÖ¾ß ÇÒ µí ¤·¤·""" ( 1 + REACH_TIME) << GoldWave? ±×°Å ½á¼­ ÆíÁı ¹Ù¶÷. ¸Å¿ì Áß¿ä
+	 *	<ë§¤ìš° ì¤‘ìš”> 
+	 *  ì½”ë“œ íŠ¹ì„±ìƒ
+	 *  ë…¸íŠ¸ê°€ REACH_TIMEì´ˆ ì´í›„ë¶€í„° ( REACH_TIME = ë…¸íŠ¸ê°€ ìƒì„±ë˜ì—ˆì„ ë•Œ íŒì •ì„ ì— ë”± ë„ë‹¬í•˜ëŠ” ì‹œê°„ ) 
+	 *  ë–¨ì–´ì§€ê²Œ ë˜ì–´ ìˆìŒ ã…‡ã…‡
+	 *  ê·¼ë° ì²«ë²ˆì§¸ ë…¸íŠ¸ ì˜¤í”„ì…‹ì„ 0ìœ¼ë¡œ í•˜ê³ 
+	 *  ì‹¤í–‰ì‹œì¼œë³´ë©´ ì²˜ìŒì—ëŠ” ë¬¸ì œ ì—†ëŠ”ë°
+	 *  ê³„ì† ì‹¤í–‰ì‹œí‚¤ë©´ ì²«ë²ˆÂŠ ë…¸íŠ¸ë‘
+	 *  ë‹¤ë¥¸ ë…¸íŠ¸ë‘ ê±°ë¦¬ê°€ ì ì  ë©€ì–´ì§
+	 *  ë ‰ ë•Œë¬¸ì¸ì§€ëŠ” ëª¨ë¥´ê² ëŠ”ë°
+	 *  ê³ ì¹ ìˆ˜ ìˆë‹¤ë©´ ìˆ˜ì • ë°”ëŒ
+	 *  ê±°ë¦¬ ì•ˆë©€ì–´ì§€ê²Œ í•˜ê¸° ìœ„í•´ì„œ
+	 *  ì¼ë¶€ëŸ¬ ì˜¤í”„ì…‹ ê°’ì— 1000 ë”í•¨ (155ë²ˆì§¸ ì¤„ ì°¸ê³ )
+	 *  """ê·¸ë˜ì„œ ìŒì•… ë„£ì„ ë•Œ ë§¨ ì•ì— 2ì´ˆ ê³µë°± ë‘¬ì•¼ í•  ë“¯ ã…‡ã…‡""" ( 1 + REACH_TIME) << GoldWave? ê·¸ê±° ì¨ì„œ í¸ì§‘ ë°”ëŒ. ë§¤ìš° ì¤‘ìš”
 	 */
 	
-	// ³ëÆ® »ı¼ºÇØ¼­ ¶³¾î¶ß¸®±â
+	// ë…¸íŠ¸ ìƒì„±í•´ì„œ ë–¨ì–´ëœ¨ë¦¬ê¸°
 	public void dropNotes() {
 		int i=0;
-		int offset = 0; // Ã¹ ³ëÆ® ½ÃÀÛ ½ÃÁ¡ (¹Ğ¸®ÃÊ)
-		int gap = 200; // ÃÖ´Ü ºñÆ® ¹Ğ¸®ÃÊ
+		int offset = 0; // ì²« ë…¸íŠ¸ ì‹œì‘ ì‹œì  (ë°€ë¦¬ì´ˆ)
+		int gap = 200; // ìµœë‹¨ ë¹„íŠ¸ ë°€ë¦¬ì´ˆ
 		
-		Beat[] beats = null; // Ã¤º¸ (?)
+		Beat[] beats = null; // ì±„ë³´ (?)
 		
 		/*
-		 *	beats == Ã¤º¸
-		 *  ¿ÀÇÁ¼Â = Ã¹ ³ëÆ®°¡ »ı¼ºµÇ´Â ½ÃÁ¡ (¹Ğ¸®ÃÊ)
-		 *  Ã¹ ³ëÆ®´Â ¿ÀÇÁ¼Â*1000 + 1 + REACH_TIMEÃÊ ÈÄ¿¡ ÆÇÁ¤¼±¿¡ µµ´ŞÇÔ 
-		 *  gap = ÀÌ°É ¹¹¶ó ¼³¸íÇØ¾ß µÉ Áö ¸ğ¸£°Ú´Âµ¥, ³ëÆ® °£ ÃÖ¼Ò °£°İÀÓ (¹Ğ¸®ÃÊ)
-		 *  ±× »ç¶÷ÀÌ Ã¤º¸ Â¥´Â °Å º¸´Ï±î ÀÌ°Å ¾²¸é¼­ ±»ÀÌ ¹Ğ¸®ÃÊ ´ÜÀ§·Î ¾È Àû°í ÇÏ´õ¶ó ¤·¤·
+		 *	beats == ì±„ë³´
+		 *  ì˜¤í”„ì…‹ = ì²« ë…¸íŠ¸ê°€ ìƒì„±ë˜ëŠ” ì‹œì  (ë°€ë¦¬ì´ˆ)
+		 *  ì²« ë…¸íŠ¸ëŠ” ì˜¤í”„ì…‹*1000 + 1 + REACH_TIMEì´ˆ í›„ì— íŒì •ì„ ì— ë„ë‹¬í•¨ 
+		 *  gap = ì´ê±¸ ë­ë¼ ì„¤ëª…í•´ì•¼ ë  ì§€ ëª¨ë¥´ê² ëŠ”ë°, ë…¸íŠ¸ ê°„ ìµœì†Œ ê°„ê²©ì„ (ë°€ë¦¬ì´ˆ)
+		 *  ê·¸ ì‚¬ëŒì´ ì±„ë³´ ì§œëŠ” ê±° ë³´ë‹ˆê¹Œ ì´ê±° ì“°ë©´ì„œ êµ³ì´ ë°€ë¦¬ì´ˆ ë‹¨ìœ„ë¡œ ì•ˆ ì ê³  í•˜ë”ë¼ ã…‡ã…‡
 		 */
-		// ¹Ø¿¡ Ã¤º¸´Â »ùÇÃ·Î Âï¾îº»°Å¶ó ¹ÚÀÚ ¾È¸ÂÀ½;;
+		// ë°‘ì— ì±„ë³´ëŠ” ìƒ˜í”Œë¡œ ì°ì–´ë³¸ê±°ë¼ ë°•ì ì•ˆë§ìŒ;;
 		if (title.equals("Unknown Brain & Rival - Control (ft. Jex)")) {
-			beats = new Beat[] { 
-					new Beat(offset, "D"), 
-					new Beat(offset+gap, "F"),
-					new Beat(offset+gap*2, "J"),
-					new Beat(offset+gap*4, "K"),
-					new Beat(offset+gap*4, "D"),
-					new Beat(offset+gap*8, "K"),
-					new Beat(offset+gap*10, "J"),
-					new Beat(offset+gap*11, "F"),
-					new Beat(offset+gap*12, "D"),
-					new Beat(offset+gap*14, "J"),
-					new Beat(offset+gap*15, "F"),
-					new Beat(offset+gap*17, "D"),
-					new Beat(offset+gap*17, "F"),
-					};
+			String name = "Control.txt";
+			File file = new File(Main.class.getResource("../charts/" + name).toURI());
+			InputStream fis = new FileInputStream(file);
+			InputStreamReader isr = new InputStreamReader(fis);
+			BufferedReader br = new BufferedReader(isr);
+			
+			String data = br.readLine();
+			String[] data_split = data.split(" ");
+			int beat_num = data_split.length;
+			String key;
+			int beat_time;
+			
+			beats = new Beat[beat_num];
+			for(int j=0; j < beat_num; j++) {
+				key = data_split[j].substring(0,1);
+				beat_time = Integer.parseInt(data_split[j].substring(1));
+				beats[j] = new Beat(offset+gap*beat_time, key);			
+			}
 		} 
-		else if (title.equals("°î¸í2")) {
+		else if (title.equals("Gradamical -Floor B2")) {
+			String name = "Floor B2.txt";
+			File file = new File(Main.class.getResource("../charts/" + name).toURI());
+			InputStream fis = new FileInputStream(file);
+			InputStreamReader isr = new InputStreamReader(fis);
+			BufferedReader br = new BufferedReader(isr);
+			
+			String data = br.readLine();
+			String[] data_split = data.split(" ");
+			int beat_num = data_split.length;
+			String key;
+			int beat_time;
+			
+			beats = new Beat[beat_num];
+			for(int j=0; j < beat_num; j++) {
+				key = data_split[j].substring(0,1);
+				beat_time = Integer.parseInt(data_split[j].substring(1));
+				beats[j] = new Beat(offset+gap*beat_time, key);			
+			}
 		}
-		else if (title.equals("°î¸í3")) {
+		else if (title.equals("Rob Gasser - Hollow (ft. Veronica Bravo)")) {
+			String name = "Hollow.txt";
+			File file = new File(Main.class.getResource("../charts/" + name).toURI());
+			InputStream fis = new FileInputStream(file);
+			InputStreamReader isr = new InputStreamReader(fis);
+			BufferedReader br = new BufferedReader(isr);
+			
+			String data = br.readLine();
+			String[] data_split = data.split(" ");
+			int beat_num = data_split.length;
+			String key;
+			int beat_time;
+			
+			beats = new Beat[beat_num];
+			for(int j=0; j < beat_num; j++) {
+				key = data_split[j].substring(0,1);
+				beat_time = Integer.parseInt(data_split[j].substring(1));
+				beats[j] = new Beat(offset+gap*beat_time, key);			
+			}
 		}
 		gamemusic.start();
 		while(i < beats.length && !isInterrupted()) {
@@ -179,7 +233,7 @@ public class Game extends Thread {
 		}
 	}
 	
-	// ÆÇÁ¤ ( Å°°¡ ´­·ÈÀ» ¶§¸¶´Ù ½ÇÇàµÊ )
+	// íŒì • ( í‚¤ê°€ ëˆŒë ¸ì„ ë•Œë§ˆë‹¤ ì‹¤í–‰ë¨ )
 	public void judge(String input) {
 		for(int i=0;i<notelist.size();i++) {
 			Note note = notelist.get(i);
@@ -190,7 +244,7 @@ public class Game extends Thread {
 		}
 	}
 	
-	// ÆÇÁ¤¿¡ µû¶ó ÅØ½ºÆ® ¶ç¿ì±â ( Note Å¬·¡½º¿¡ ÀÖ´Â judge Âü°í )
+	// íŒì •ì— ë”°ë¼ í…ìŠ¤íŠ¸ ë„ìš°ê¸° ( Note í´ë˜ìŠ¤ì— ìˆëŠ” judge ì°¸ê³  )
 	public void judgeEvent(String judge) {
 		if(judge.contentEquals("Late")) {
 			judgeimage = new ImageIcon(Main.class.getResource("../images/late.png")).getImage();
