@@ -146,7 +146,7 @@ public class Game extends Thread {
 	 */
 	
 	// 노트 생성해서 떨어뜨리기
-	public void dropNotes() {
+	public void dropNotes() throws IOException, URISyntaxException{
 		int i=0;
 		int offset = 0; // 첫 노트 시작 시점 (밀리초)
 		int gap = 200; // 최단 비트 밀리초
