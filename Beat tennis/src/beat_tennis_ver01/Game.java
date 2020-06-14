@@ -104,21 +104,25 @@ public class Game extends Thread {
 	public void pressD() {
 		judge("D");
 		noteRouteD = new ImageIcon(Main.class.getResource("../images/noteroutepressed.png")).getImage();
+		new Music("Keysound.mp3", false).start();
 	}
 
 	public void pressF() {
 		judge("F");
 		noteRouteF = new ImageIcon(Main.class.getResource("../images/noteroutepressed.png")).getImage();
+		new Music("Keysound.mp3", false).start();
 	}
 
 	public void pressJ() {
 		judge("J");
 		noteRouteJ = new ImageIcon(Main.class.getResource("../images/noteroutepressed.png")).getImage();
+		new Music("Keysound.mp3", false).start();
 	}
 
 	public void pressK() {
 		judge("K");
 		noteRouteK = new ImageIcon(Main.class.getResource("../images/noteroutepressed.png")).getImage();
+		new Music("Keysound.mp3", false).start();
 	}
 
 	public void releaseD() {
@@ -191,6 +195,7 @@ public class Game extends Thread {
 		// 밑에 채보는 샘플로 찍어본거라 박자 안맞음;;
 		if (title.equals("Unknown Brain & Rival - Control (ft. Jex)")) {
 			name = "Control";
+			gap = 300;
 		} 
 		
 		else if (title.equals("Gradamical -Floor B2")) {
@@ -239,7 +244,7 @@ public class Game extends Thread {
 		}
 		
 		Robot tRobot = new Robot();
-		tRobot.delay(1000);
+		tRobot.delay(1200);
 		
 		close();
 	}
