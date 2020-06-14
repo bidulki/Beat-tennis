@@ -178,6 +178,7 @@ public class Game extends Thread {
 		int i=0;
 		int offset = 0; // 첫 노트 시작 시점 (밀리초)
 		int gap = 200; // 최단 비트 밀리초
+		String name= ""; //(김도현)노래 이름, 채보 파일 접근에 사용
 		
 		Beat[] beats = null; // 채보
 		
@@ -186,74 +187,45 @@ public class Game extends Thread {
 		 *  오프셋 = 첫 노트가 생성되는 시점 (밀리초)
 		 *  첫 노트는 오프셋*1000 + 1 + REACH_TIME초 후에 판정선에 도달함 
 		 *  gap = 이걸 뭐라 설명해야 될 지 모르겠는데, 노트 간 최소 간격임 (밀리초)
-		 *  그 사람이 채보 짜는 거 보니까 이거 쓰면서 굳이 밀리초 단위로 안 적고 하더라 ㅇㅇ
 		 */
 		// 밑에 채보는 샘플로 찍어본거라 박자 안맞음;;
 		if (title.equals("Unknown Brain & Rival - Control (ft. Jex)")) {
-			String name = "Control.txt";
-			File file = new File(Main.class.getResource("../charts/" + name).toURI());
-			InputStream fis = new FileInputStream(file);
-			InputStreamReader isr = new InputStreamReader(fis);
-			BufferedReader br = new BufferedReader(isr);
-			
-			String data = br.readLine();
-			String[] data_split = data.split(" ");
-			int beat_num = data_split.length;
-			String key;
-			int beat_time;
-			
-			beats = new Beat[beat_num];
-			
-			for(int j=0; j < beat_num; j++) {
-				key = data_split[j].substring(0,1);
-				beat_time = Integer.parseInt(data_split[j].substring(1));
-				beats[j] = new Beat(offset+gap*beat_time, key);			
-			}
+			name = "Control";
 		} 
 		
 		else if (title.equals("Gradamical -Floor B2")) {
-			String name = "Floor B2.txt";
-			File file = new File(Main.class.getResource("../charts/" + name).toURI());
-			InputStream fis = new FileInputStream(file);
-			InputStreamReader isr = new InputStreamReader(fis);
-			BufferedReader br = new BufferedReader(isr);
-			
-			String data = br.readLine();
-			String[] data_split = data.split(" ");
-			int beat_num = data_split.length;
-			String key;
-			int beat_time;
-			
-			beats = new Beat[beat_num];
-			
-			for(int j=0; j < beat_num; j++) {
-				key = data_split[j].substring(0,1);
-				beat_time = Integer.parseInt(data_split[j].substring(1));
-				beats[j] = new Beat(offset+gap*beat_time, key);			
-			}
+			name = "Floor B2";
 		}
 		
 		else if (title.equals("Rob Gasser - Hollow (ft. Veronica Bravo)")) {
-			String name = "Hollow.txt";
-			File file = new File(Main.class.getResource("../charts/" + name).toURI());
-			InputStream fis = new FileInputStream(file);
-			InputStreamReader isr = new InputStreamReader(fis);
-			BufferedReader br = new BufferedReader(isr);
-			
-			String data = br.readLine();
-			String[] data_split = data.split(" ");
-			int beat_num = data_split.length;
-			String key;
-			int beat_time;
-			
-			beats = new Beat[beat_num];
-			
-			for(int j=0; j < beat_num; j++) {
-				key = data_split[j].substring(0,1);
-				beat_time = Integer.parseInt(data_split[j].substring(1));
-				beats[j] = new Beat(offset+gap*beat_time, key);			
-			}
+			name = "Hollow";
 		}
+		/*
+		 * (김도현)
+		 * charts 파일에 있는 각 노래 별 채보 txt 파일을 읽어서
+		 * 키 버튼과 시간 정보를 뽑아낸다음
+		 * 비트를 키버튼과 시간 정보를 통해 생성해내는 코드
+		 */
+		File file = new File(Main.class.getResource("../charts/" + name + ".txt").toURI());
+		InputStream fis = new FileInputStream(file);
+		InputStreamReader isr = new InputStreamReader(fis);
+		BufferedReader br = new BufferedReader(isr);	
+		
+		String data = br.readLine();
+		String[] data_split = data.split(" ");		
+		int beat_num = data_split.length;
+		String key;
+		int beat_time;
+			
+		beats = new Beat[beat_num];
+			
+		for(int j=0; j < beat_num; j++) {
+			key = data_split[j].substring(0,1);
+			beat_time = Integer.parseInt(data_split[j].substring(1));
+			beats[j] = new Beat(offset+gap*beat_time, key);			
+		}
+		br.close(); isr.close(); fis.close();
+		
 		
 		gamemusic.start();
 		
