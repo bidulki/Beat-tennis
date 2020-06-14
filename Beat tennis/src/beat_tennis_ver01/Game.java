@@ -215,14 +215,14 @@ public class Game extends Thread {
 		String[] data_split = data.split(" ");		
 		int beat_num = data_split.length;
 		String key;
-		int beat_time;
+		double beat_time;
 			
 		beats = new Beat[beat_num];
 			
 		for(int j=0; j < beat_num; j++) {
 			key = data_split[j].substring(0,1);
-			beat_time = Integer.parseInt(data_split[j].substring(1));
-			beats[j] = new Beat(offset+gap*beat_time, key);			
+			beat_time = Double.parseDouble(data_split[j].substring(1));
+			beats[j] = new Beat((int)(offset+gap*beat_time), key);			
 		}
 		br.close(); isr.close(); fis.close();
 		
