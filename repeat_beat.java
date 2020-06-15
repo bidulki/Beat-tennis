@@ -19,7 +19,7 @@ import java.util.ArrayList;
 
  
 
-public class practice06 {
+public class repeat_beat {
 
 	public static void main(String[] args) {
 		try {
