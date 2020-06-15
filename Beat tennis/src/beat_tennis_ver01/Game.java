@@ -21,6 +21,7 @@ import java.io.InputStreamReader;
 import java.net.URISyntaxException;
 
 // Game 클래스 생성 및 틀 제작(민경환)
+// 세부 구현 (이찬영 & 김도현)
 public class Game extends Thread {
 
 	private Image gameInfo = new ImageIcon(Main.class.getResource("../images/gameinfo.png")).getImage();
@@ -47,7 +48,7 @@ public class Game extends Thread {
 	}
 	
 	public void screenDraw(Graphics2D g) {
-		// x,y 좌표 조정하면서 화면 만들기 (민겨오한)
+		// x,y 좌표 조정하면서 화면 만들기 (이찬영)
 		g.drawImage(noteRouteD, 434, 30, null);
 		g.drawImage(noteRouteF, 538, 30, null);
 		g.drawImage(noteRouteJ, 642, 30, null);
@@ -59,8 +60,8 @@ public class Game extends Thread {
 		g.drawImage(noteRouteLine, 846, 30, null);
 		g.drawImage(judgementLine, 430, 580, null);
 		
-		// 노트 떨어지는거하고 판정된거 갱신하면서 화면에 출력
-		// 노트가 판정선 완전히 넘어가면 미스 판정
+		// 노트 떨어지는거하고 판정된거 갱신하면서 화면에 출력 (이찬영)
+		// 노트가 판정선 완전히 넘어가면 미스 판정 (이찬영)
 		for (int i = 0; i < notelist.size(); i++) {
 			Note note = notelist.get(i);
 			if(note.getY() > 620) {
@@ -102,7 +103,7 @@ public class Game extends Thread {
 		}
 	}
 	
-	// 키 누르거나 뗐을 때 판정 + 이미지 교환
+	// 키 누르거나 뗐을 때 판정 + 이미지 교환 (이찬영)
 	// 키 인식 틀 및 키음 생성 (민경환)
 	public void pressD() {
 		judge("D");
@@ -170,7 +171,7 @@ public class Game extends Thread {
 	 *  해소를 위해 노트 간 간격의 간격 문제 해소를 위해  오프셋 값에 1000 추가
 	 */
 	
-	// 노트 생성해서 떨어뜨리기
+	// 노트 생성해서 떨어뜨리기 (이찬영)
 	public void dropNotes() throws IOException, URISyntaxException, AWTException{
 		int i=0;
 		int offset = 0; // 첫 노트 시작 시점 (밀리초)
@@ -197,6 +198,8 @@ public class Game extends Thread {
 		
 		else if (title.equals("Rob Gasser - Hollow (ft. Veronica Bravo)")) {
 			name = "Hollow";
+			gap = 100;
+			offset = 40;
 		}
 		/*
 		 * (김도현)
@@ -243,7 +246,7 @@ public class Game extends Thread {
 		close();
 	}
 	
-	// 판정 (키가 눌렸을 때마다 실행됨)
+	// 판정 (이찬영) (키가 눌렸을 때마다 실행됨)
 	public void judge(String input) {
 		for(int i=0;i<notelist.size();i++) {
 			Note note = notelist.get(i);
@@ -254,7 +257,7 @@ public class Game extends Thread {
 		}
 	}
 	
-	// 판정에 따라 텍스트 띄우기 (Note 클래스에 있는 judge 참고)
+	// 판정에 따라 텍스트 띄우기 (이찬영) (Note 클래스에 있는 judge 참고)
 	// 판정 당 점수 추가 (민경환)
 	public void judgeEvent(String judge) {
 		if(judge.contentEquals("Late")) {
