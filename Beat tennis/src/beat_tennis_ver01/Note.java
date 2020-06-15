@@ -71,6 +71,7 @@ public class Note extends Thread {
 	
 	// 판정 함수
 	// 노트 위치에 따라 판정 결정하고 노트 삭제
+	// 판정 세부 수치값 조정 및 결정 (민경환)
 	public String judge() {
 		if(y >= 610) {
 			close();
