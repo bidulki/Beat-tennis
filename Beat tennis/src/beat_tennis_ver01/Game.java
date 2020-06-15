@@ -82,7 +82,7 @@ public class Game extends Thread {
 		g.drawString(title, 20, 702);
 		g.drawImage(judgeimage,460,420,null);
 		
-		// 키 입력 정보
+		// 키 입력 정보 (민경환)
 		g.drawString("D", 474, 650);
 		g.drawString("F", 578, 650);
 		g.drawString("J", 682, 650);
@@ -104,29 +104,25 @@ public class Game extends Thread {
 	}
 	
 	// 키 누르거나 뗐을 때 판정 + 이미지 교환 (이찬영)
-	// 키 인식 틀 및 키음 생성 (민경환)
+	// 키 인식 틀 생성 (민경환)
 	public void pressD() {
 		judge("D");
 		noteRouteD = new ImageIcon(Main.class.getResource("../images/noteroutepressed.png")).getImage();
-		new Music("Keysound.mp3", false).start();
 	}
 
 	public void pressF() {
 		judge("F");
 		noteRouteF = new ImageIcon(Main.class.getResource("../images/noteroutepressed.png")).getImage();
-		new Music("Keysound.mp3", false).start();
 	}
 
 	public void pressJ() {
 		judge("J");
 		noteRouteJ = new ImageIcon(Main.class.getResource("../images/noteroutepressed.png")).getImage();
-		new Music("Keysound.mp3", false).start();
 	}
 
 	public void pressK() {
 		judge("K");
 		noteRouteK = new ImageIcon(Main.class.getResource("../images/noteroutepressed.png")).getImage();
-		new Music("Keysound.mp3", false).start();
 	}
 
 	public void releaseD() {
