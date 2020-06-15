@@ -5,15 +5,11 @@ import java.awt.Image;
 
 import javax.swing.ImageIcon;
 
+// ë…¸íŠ¸ í´ëž˜ìŠ¤ êµ¬í˜„ (ì´ì°¬ì˜)
 public class Note extends Thread {
 
 	private Image notebasicimage = new ImageIcon(Main.class.getResource("../images/notebasic.png")).getImage();
-	/*
-	 * y °¡ ¾î¶² °ªÀ¸·Î ÃÊ±âÈ­ µÆ´Âµ¥ Àú°Ô ¾î¶² ÀÇ¹Ì³Ä¸é 
-	 * ³ëÆ®°¡ »ý¼ºµÉ ¶§ Á¤È®È÷ REACH_TIME ÃÊ ÈÄ¿¡ µµ´ÞÇÏ°Ô µÊ
-	 * SLEEP_TIME¸¶´Ù NOTE_SPEED ÇÈ¼¿¸¸Å­ ³»·Á¿À°Ô µÇ´Âµ¥
-	 * 1000 ¹Ð¸®ÃÊ´ç 1000/SLEEP_TIME ¸¸Å­ ½ÇÇàµÇ¹Ç·Î ¤·¤·
-	 */
+
 	private int x, y = 580 - (1000 / Main.SLEEP_TIME * Main.NOTE_SPEED) * Main.REACH_TIME;
 	private String noteType;
 	private boolean proceeded = true;
@@ -29,7 +25,7 @@ public class Note extends Thread {
 		proceeded = false;
 	}
 	
-	// Å°¿¡ µû¶ó ³ëÆ® °¡·Î À§Ä¡ ¼³Á¤
+	// í‚¤ì— ë”°ë¼ ë…¸íŠ¸ ê°€ë¡œ ìœ„ì¹˜ ì„¤ì •
 	public Note(String noteType) {
 		if (noteType.equals("D"))
 			x = 434;
@@ -42,7 +38,7 @@ public class Note extends Thread {
 		this.noteType = noteType;
 	}
 
-	// ÇÑ¹ø ½ÇÇàµÉ¶§¸¶´Ù NOTE_SPEED ÇÈ¼¿¸¸Å­ ¶³¾î¶ß¸²
+	// í•œë²ˆ ì‹¤í–‰ë ë•Œë§ˆë‹¤ NOTE_SPEED í”½ì…€ë§Œí¼ ë–¨ì–´ëœ¨ë¦¼
 	public void drop() {
 		y += Main.NOTE_SPEED;
 		if(y > 620) {
@@ -54,7 +50,7 @@ public class Note extends Thread {
 		g.drawImage(notebasicimage, x, y, null);
 	}
 
-	// SLEEP_TIME ¸¶´Ù NOTE_SPEED ÇÈ¼¿¸¸Å­ ¶³¾î¶ß¸²
+	// SLEEP_TIME ë§ˆë‹¤ NOTE_SPEED í”½ì…€ë§Œí¼ ë–¨ì–´ëœ¨ë¦¼
 	@Override
 	public synchronized void run() {
 		try {
@@ -73,8 +69,8 @@ public class Note extends Thread {
 		}
 	}
 	
-	// ÆÇÁ¤ ÇÔ¼ö
-	// ³ëÆ® À§Ä¡¿¡ µû¶ó ÆÇÁ¤ °áÁ¤ÇÏ°í ³ëÆ® »èÁ¦
+	// íŒì • í•¨ìˆ˜
+	// ë…¸íŠ¸ ìœ„ì¹˜ì— ë”°ë¼ íŒì • ê²°ì •í•˜ê³  ë…¸íŠ¸ ì‚­ì œ
 	public String judge() {
 		if(y >= 610) {
 			close();
