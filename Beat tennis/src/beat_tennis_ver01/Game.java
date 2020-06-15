@@ -190,6 +190,8 @@ public class Game extends Thread {
 		
 		else if (title.equals("Gradamical -Floor B2")) {
 			name = "Floor B2";
+			gap = 250;
+			
 		}
 		
 		else if (title.equals("Rob Gasser - Hollow (ft. Veronica Bravo)")) {
