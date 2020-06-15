@@ -1,12 +1,16 @@
 package beat_tennis_ver01;
 
+/*
+ * ë©”ì¸ ë©”ì†Œë“œ êµ¬í˜„ (ê¹€ë„í˜„)
+ */
+
 public class Main {
 
 	public static final int SCREEN_WIDTH = 1280;
 	public static final int SCREEN_HEIGHT = 720;
-	public static final int REACH_TIME = 1; // ³ëÆ®°¡ »ı¼ºµÆÀ» ¶§ ¸î ÃÊ ÈÄ¿¡ ¶³¾îÁúÁö °áÁ¤ÇÏ´Â ÇÔ¼ö
-	public static int NOTE_SPEED = 8; // SLEEP_TIME´ç ¶³¾îÁö´Â ÇÈ¼¿ ¼ö
-	public static int SLEEP_TIME = 10; // ÇÑ¹ø NOTE_SPEED¾¿ ¶³¾î¶ß¸±¶§¸¶´Ù ÀÌ¸¸Å­ ½½¸³
+	public static final int REACH_TIME = 1; // ë…¸íŠ¸ê°€ ìƒì„±ëì„ ë•Œ ëª‡ ì´ˆ í›„ì— ë–¨ì–´ì§ˆì§€ ê²°ì •í•˜ëŠ” í•¨ìˆ˜
+	public static int NOTE_SPEED = 8; // SLEEP_TIMEë‹¹ ë–¨ì–´ì§€ëŠ” í”½ì…€ ìˆ˜
+	public static int SLEEP_TIME = 10; // í•œë²ˆ NOTE_SPEEDì”© ë–¨ì–´ëœ¨ë¦´ë•Œë§ˆë‹¤ ì´ë§Œí¼ ìŠ¬ë¦½
 	
 	public static void main(String[] args) {
 		
