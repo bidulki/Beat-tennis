@@ -3,6 +3,7 @@ package beat_tennis_ver01;
 import java.awt.AWTException;
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.FontMetrics;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.RenderingHints;
@@ -97,8 +98,12 @@ public class Game extends Thread {
 		// 게임 끝난 후 최종 점수 출력 (민경환)
 		if(game_end) {
 			g.setColor(Color.black);
-			g.drawString("Final Score", 560, 220);
-			g.drawString(str_score, 600, 260);
+			Font font = g.getFont();
+			FontMetrics metrics = g.getFontMetrics(font);
+			int width = metrics.stringWidth("Final Score");
+			g.drawString("Final Score", (1280 / 2) - (width / 2) , 220);
+			width = metrics.stringWidth(str_score);
+			g.drawString(str_score, (1280 / 2) - (width / 2), 260);
 			g.setFont(new Font("Elephant", Font.BOLD, 30));
 		}
 	}
