@@ -65,7 +65,7 @@ public class BeatTennis extends JFrame {
 	private Music selectedMusic;
 	private int nowselected=0;
 	
-	// beattennis 안에서 게임 시작할 때 생성할 game 클래스
+	// beattennis 안에서 게임 시작할 때 생성할 game 클래스 (민경환)
 	public static Game game;
 	
 	// 생성자
@@ -87,7 +87,7 @@ public class BeatTennis extends JFrame {
 		setVisible(true);
 		setLayout(null);
 		
-		// d,f,j,k 입력 받을 keylistener
+		// d,f,j,k 입력 받을 keylistener (민경환)
 		addKeyListener(new KeyListener());
 
 		IntroMusic.start();
