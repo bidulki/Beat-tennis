@@ -1,11 +1,12 @@
 package beat_tennis_ver01;
 
+// ê³¡ ì •ë³´ë¥¼ ë‹´ëŠ” track í´ë˜ìŠ¤ êµ¬í˜„ (ì´ì°¬ì˜)
 public class Track {
 	
-	private String title; // °î¸í
-	private String thumbnail; // ½æ³×ÀÏ
-	private String highlights; // °î ¼±ÅÃÇßÀ» ¶§ ÇÏÀÌ¶óÀÌÆ® ÀÏºÎºĞ
-	private String gamemusic; // ÀüÁ¦ °î
+	private String title; // ê³¡ëª…
+	private String thumbnail; // ì¸ë„¤ì¼
+	private String highlights; // ê³¡ ì„ íƒí–ˆì„ ë•Œ í•˜ì´ë¼ì´íŠ¸ ì¼ë¶€ë¶„
+	private String gamemusic; // ì „ì œ ê³¡
 	
 	public String getTitle() {
 		return title;
