@@ -3,10 +3,11 @@ package beat_tennis_ver01;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 
-// KeyListener class Æ² »ı¼º ¹× Á¦ÀÛ (¹Î°æÈ¯, ÀÌÂù¿µ)
+// KeyListener class í‹€ ìƒì„± ë° ì œì‘ (ë¯¼ê²½í™˜, ì´ì°¬ì˜)
 public class KeyListener extends KeyAdapter{
 
-	// ¸» ±×´ë·Î Å° ¸®½º³Ê ¤·¤·
+	// ë¦¬ë“¬ê²Œì„ì— ì“¸ í‚¤ì¸ D, F, J, Kì— Event êµ¬í˜„
+	// ê²Œì„ í™”ë©´ì¼ ë•Œë§Œ í•´ì•¼ë˜ë¯€ë¡œ ì²«ë²ˆì§¸ ì¡°ê±´ì„ ë‹¬ì•„ì¤Œ (ë¯¼ê²½í™˜)
 	@Override
 	public synchronized void keyPressed(KeyEvent e) {
 		if(BeatTennis.game == null)
