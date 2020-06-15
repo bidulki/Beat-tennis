@@ -49,10 +49,10 @@ public class BeatTennis extends JFrame {
 	private JButton songstartbutton = new JButton(songstartbuttonimage); // 곡 시작
 	private JButton backbutton = new JButton(backbuttonimage); // 뒤로가기
 	
-	private Image background = new ImageIcon(Main.class.getResource("../images/background3.jpeg")).getImage();
+	private Image background = new ImageIcon(Main.class.getResource("../images/background3.jpeg")).getImage();//배경화면(김도현)
 	private JLabel menubar = new JLabel(new ImageIcon(Main.class.getResource("../images/menubar.png"))); //상단 메뉴바
 
-	Music IntroMusic = new Music("bgm1.mp3", false);
+	Music IntroMusic = new Music("bgm1.mp3", false); //배경음악
 	
 	private int mouseX, mouseY;
 
@@ -76,16 +76,16 @@ public class BeatTennis extends JFrame {
 		tracklist.add(new Track("song2_thumbnail.png", "Floor B2 Cutting.mp3", "Gradamical -Floor B2.mp3","Gradamical -Floor B2"));
 		tracklist.add(new Track("song3_thumbnail.png", "Hollow Cutting.mp3", "Rob Gasser - Hollow (ft. Veronica Bravo).mp3","Rob Gasser - Hollow (ft. Veronica Bravo)"));
 		
-		// gui 설정 (이찬영)
-		setUndecorated(true);
-		setTitle("Beat Tennis");
-		setSize(Main.SCREEN_WIDTH, Main.SCREEN_HEIGHT);
-		setResizable(false);
-		setLocationRelativeTo(null);
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBackground(new Color(0, 0, 0, 0));
-		setVisible(true);
-		setLayout(null);
+		// gui 설정 (김도현)
+		setUndecorated(true); //기존 메뉴바 금지
+		setTitle("Beat Tennis"); //제목
+		setSize(Main.SCREEN_WIDTH, Main.SCREEN_HEIGHT); //창크기 설정
+		setResizable(false); //창 크기 변경 금지
+		setLocationRelativeTo(null); //화면 정중앙에 창 띄우기
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // 게임창 종료시 게임 종료
+		setBackground(new Color(0, 0, 0, 0)); //paintComponents 시 배경 흰색 
+		setVisible(true); // 게임창 출력
+		setLayout(null); //레이아웃
 		
 		// d,f,j,k 입력 받을 keylistener (민경환)
 		addKeyListener(new KeyListener());
@@ -289,17 +289,18 @@ public class BeatTennis extends JFrame {
 		add(backbutton);
 	}
 	
-	
+	// 화면출력(김도현)
 	public void paint(Graphics g) {
 		screenImage = createImage(Main.SCREEN_WIDTH, Main.SCREEN_HEIGHT);
 		screenGraphic = screenImage.getGraphics();
 		screenDraw((Graphics2D) screenGraphic);
-		g.drawImage(screenImage, 0, 0, null);
+		g.drawImage(screenImage, 0, 0, null); //화면 정중앙에 스크린 그리기
 	}
 	
-	// 상황에 따른 screendraw (이찬영)
+	//screendraw (김도현)
 	public void screenDraw(Graphics2D g) {
 		g.drawImage(background, 0, 0, null);
+		// 상황에 따른 screendraw (이찬영)
 		if (ismainscreen) {
 			g.drawImage(selectedimage, 440, 100, null);
 		}
@@ -308,7 +309,7 @@ public class BeatTennis extends JFrame {
 			game.screenDraw(g);
 		}
 		paintComponents(g);
-		this.repaint();
+		this.repaint(); //다시 paint 함수 호출(매순간 마다 다시 그리기)
 	}
 	
 	// 곡 선택 (이찬영)
