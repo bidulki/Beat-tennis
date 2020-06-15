@@ -16,6 +16,8 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 
 // beat tennis 클래스 구현 (대부분 이찬영)
+// 백그라운드 이미지 제작 : 김도현
+// 스프라이트 이미지 제작 : 이찬영
 @SuppressWarnings("serial")
 public class BeatTennis extends JFrame {
 
