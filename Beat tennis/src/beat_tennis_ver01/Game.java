@@ -20,6 +20,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URISyntaxException;
 
+// Game 클래스 생성 및 틀 제작(민경환)
 public class Game extends Thread {
 
 	private Image gameInfo = new ImageIcon(Main.class.getResource("../images/gameinfo.png")).getImage();
@@ -44,9 +45,9 @@ public class Game extends Thread {
 		this.musicpath = musicpath;
 		gamemusic = new Music(this.musicpath, false);
 	}
-
+	
 	public void screenDraw(Graphics2D g) {
-		// 여기서 x,y 좌표 조정하면서 화면 만들기
+		// x,y 좌표 조정하면서 화면 만들기 (민겨오한)
 		g.drawImage(noteRouteD, 434, 30, null);
 		g.drawImage(noteRouteF, 538, 30, null);
 		g.drawImage(noteRouteJ, 642, 30, null);
@@ -72,7 +73,7 @@ public class Game extends Thread {
 			note.screenDraw(g);
 		}
 
-		// 곡 정보 넣기 (폰트는 언제든지 바꿔도 됨)
+		// 곡 정보 넣기 (민경환)
 		g.drawImage(gameInfo, 0, 660, null);
 		g.setColor(Color.white);
 		g.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
@@ -87,11 +88,12 @@ public class Game extends Thread {
 		g.drawString("K", 786, 650);
 		g.setFont(new Font("Elephant", Font.BOLD, 30));
 		
-		// 점수 표시
+		// 점수 표시 (민경환)
 		String str_score = Integer.toString(score);
 		g.drawString(str_score, 1100, 702);
 		g.setFont(new Font("Arial", Font.BOLD, 30));
 		
+		// 게임 끝난 후 최종 점수 출력 (민경환)
 		if(game_end) {
 			g.setColor(Color.black);
 			g.drawString("Final Score", 560, 220);
@@ -101,6 +103,7 @@ public class Game extends Thread {
 	}
 	
 	// 키 누르거나 뗐을 때 판정 + 이미지 교환
+	// 키 인식 틀 및 키음 생성 (민경환)
 	public void pressD() {
 		judge("D");
 		noteRouteD = new ImageIcon(Main.class.getResource("../images/noteroutepressed.png")).getImage();
@@ -150,7 +153,6 @@ public class Game extends Thread {
 		} catch (URISyntaxException e) {
 			e.printStackTrace();
 		} catch (AWTException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
@@ -163,18 +165,9 @@ public class Game extends Thread {
 
 	/*
 	 *	<매우 중요> 
-	 *  코드 특성상
-	 *  노트가 REACH_TIME초 이후부터 ( REACH_TIME = 노트가 생성되었을 때 판정선에 딱 도달하는 시간 ) 
-	 *  떨어지게 되어 있음 ㅇㅇ
-	 *  근데 첫번째 노트 오프셋을 0으로 하고
-	 *  실행시켜보면 처음에는 문제 없는데
-	 *  계속 실행시키면 첫번 노트랑
-	 *  다른 노트랑 거리가 점점 멀어짐
-	 *  렉 때문인지는 모르겠는데
-	 *  고칠수 있다면 수정 바람
-	 *  거리 안멀어지게 하기 위해서
-	 *  일부러 오프셋 값에 1000 더함 (155번째 줄 참고)
-	 *  """그래서 음악 넣을 때 맨 앞에 2초 공백 둬야 할 듯 ㅇㅇ""" ( 1 + REACH_TIME) << GoldWave? 그거 써서 편집 바람. 매우 중요
+	 *  코드상 로직 : 노트가 REACH_TIME초 이후부터 ( REACH_TIME = 노트가 생성되었을 때 판정선에 딱 도달하는 시간 ) 떨어짐
+	 *  하지만 첫번째 노트 오프셋을 0으로 하면 노트 간 간격이 일정하게 나오지 않는 문제가 발생. 
+	 *  해소를 위해 노트 간 간격의 간격 문제 해소를 위해  오프셋 값에 1000 추가
 	 */
 	
 	// 노트 생성해서 떨어뜨리기
@@ -190,9 +183,9 @@ public class Game extends Thread {
 		 *	beats == 채보
 		 *  오프셋 = 첫 노트가 생성되는 시점 (밀리초)
 		 *  첫 노트는 오프셋*1000 + 1 + REACH_TIME초 후에 판정선에 도달함 
-		 *  gap = 이걸 뭐라 설명해야 될 지 모르겠는데, 노트 간 최소 간격임 (밀리초)
+		 *  gap = 노트 간 최소 간격 (밀리초)
 		 */
-		// 밑에 채보는 샘플로 찍어본거라 박자 안맞음;;
+		
 		if (title.equals("Unknown Brain & Rival - Control (ft. Jex)")) {
 			name = "Control";
 			gap = 300;
@@ -208,7 +201,7 @@ public class Game extends Thread {
 		/*
 		 * (김도현)
 		 * charts 파일에 있는 각 노래 별 채보 txt 파일을 읽어서
-		 * 키 버튼과 시간 정보를 뽑아낸다음
+		 * 키 버튼과 시간 정보를 뽑아낸 다음
 		 * 비트를 키버튼과 시간 정보를 통해 생성해내는 코드
 		 */
 		File file = new File(Main.class.getResource("../charts/" + name + ".txt").toURI());
@@ -243,8 +236,9 @@ public class Game extends Thread {
 			}
 		}
 		
+		// 노트와 음악의 delay를 없애기 위해 프로세스 1500ms동안 정지 (민경환)
 		Robot tRobot = new Robot();
-		tRobot.delay(1200);
+		tRobot.delay(1500);
 		
 		close();
 	}
@@ -261,6 +255,7 @@ public class Game extends Thread {
 	}
 	
 	// 판정에 따라 텍스트 띄우기 (Note 클래스에 있는 judge 참고)
+	// 판정 당 점수 추가 (민경환)
 	public void judgeEvent(String judge) {
 		if(judge.contentEquals("Late")) {
 			judgeimage = new ImageIcon(Main.class.getResource("../images/late.png")).getImage();

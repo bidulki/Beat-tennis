@@ -3,6 +3,7 @@ package beat_tennis_ver01;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 
+// KeyListener class 틀 생성 및 제작 (민경환, 이찬영)
 public class KeyListener extends KeyAdapter{
 
 	// 말 그대로 키 리스너 ㅇㅇ

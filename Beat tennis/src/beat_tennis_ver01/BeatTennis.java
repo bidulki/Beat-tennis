@@ -63,7 +63,7 @@ public class BeatTennis extends JFrame {
 	
 	public BeatTennis() {
 		
-		//Tracklist에 곡 추가, 원하는 곡 추가 후, 이름 바꾸기
+		//Tracklist에 곡 추가 (민경환)
 		tracklist.add(new Track("song1_thumbnail.png", "Control Cutting.mp3", "Unknown Brain & Rival - Control (ft. Jex).mp3","Unknown Brain & Rival - Control (ft. Jex)"));
 		tracklist.add(new Track("song2_thumbnail.png", "Floor B2 Cutting.mp3", "Gradamical -Floor B2.mp3","Gradamical -Floor B2"));
 		tracklist.add(new Track("song3_thumbnail.png", "Hollow Cutting.mp3", "Rob Gasser - Hollow (ft. Veronica Bravo).mp3","Rob Gasser - Hollow (ft. Veronica Bravo)"));
@@ -245,7 +245,7 @@ public class BeatTennis extends JFrame {
 		});
 		add(songstartbutton);
 		
-		// 메인화면으로 돌아가는 버튼 (왼쪽 화살표)
+		// 메인화면으로 돌아가는 버튼 (왼쪽 화살표) (민경환)
 		backbutton.setBounds(20, 50, 60, 60);
 		backbutton.setBorderPainted(false);
 		backbutton.setContentAreaFilled(false);
@@ -285,7 +285,7 @@ public class BeatTennis extends JFrame {
 		if (ismainscreen) {
 			g.drawImage(selectedimage, 440, 100, null);
 		}
-		// Game Screen
+		// Game Screen (민경환)
 		if (isgamescreen) {
 			game.screenDraw(g);
 		}
@@ -317,7 +317,7 @@ public class BeatTennis extends JFrame {
 		selectTrack(nowselected);
 	}
 	
-	// When the game starts
+	// When the game starts (민경환)
 	public void gameStart(int nowSelected) {
 		if(selectedMusic != null) 
 			selectedMusic.close();
@@ -333,7 +333,7 @@ public class BeatTennis extends JFrame {
 		requestFocus();
 	}
 	
-	// When the user wants go to back
+	// When the user wants go to back (민경환)
 	public void backMain() {
 		ismainscreen = true;
 		leftbutton.setVisible(true);
